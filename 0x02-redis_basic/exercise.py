@@ -9,7 +9,6 @@ import uuid
 from functools import wraps
 
 
-
 def get_decorator(f):
     "decorator for get function"
     @wraps(f)
@@ -24,6 +23,23 @@ def get_decorator(f):
         else:
             return value
     return wrapper
+
+
+def count_calls(method: Callable) -> Callable:
+    """
+    This decorator implements a system to count how many times methods of
+    the Cache class are called.
+    """
+
+    @wraps(method)
+    def wrapper(self, *args,  **kwargs):
+        """wrapper function for get_count decorator"""
+        key = method.__qualname__
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
+
+
 class Cache:
     """
     This class provides methods to manage data in a Redis database.
@@ -36,6 +52,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[int, float, str, bytes]) -> str:
         """
         Store an instance of the Redis client as a private variable

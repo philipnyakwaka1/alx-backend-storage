@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
-"""
-Main file
-"""
+""" Main file """
 
-from exercise import Cache
+Cache = __import__('exercise').Cache
+
 cache = Cache()
 
-TEST_CASES = {
-    b"1": None,
-    123.2: float,
-    "3": lambda d: d.decode("utf-8")
-}
+cache.store(b"first")
+print(cache.get(cache.store.__qualname__))
 
-for value, fn in TEST_CASES.items():
-    c = Cache()
-    key = c.store(value)
-    s = c.get(key, bytes)
-    print(s, type(s))
+cache.store(b"second")
+cache.store(b"third")
+print(cache.get(cache.store.__qualname__))
