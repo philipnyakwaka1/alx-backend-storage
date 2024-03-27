@@ -2,15 +2,18 @@
 """
 Main file
 """
-import redis
 
-Cache = __import__('exercise').Cache
-
+from exercise import Cache
 cache = Cache()
 
-data = b"hello"
-key = cache.store(data)
-print(key)
+TEST_CASES = {
+    b"1": None,
+    123: int,
+    "3": lambda d: d.decode("utf-8")
+}
 
-local_redis = redis.Redis()
-print(local_redis.get(key))
+for value, fn in TEST_CASES.items():
+    c = Cache()
+    key = c.store(value)
+    s = c.get_int(key)
+    print(s, type(s))
