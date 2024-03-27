@@ -9,6 +9,20 @@ import uuid
 from functools import wraps
 
 
+def call_history(method) -> Callable:
+    """decorator"""
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """wrapper"""
+        inputs = method.__qualname__ + ':inputs'
+        outputs = method.__qualname__ + ':outputs'
+        self._redis.rpush(inputs, str(args))
+        id = method(self, *args, **kwargs)
+        self._redis.rpush(outputs, id)
+        return id
+    return wrapper
+
+
 def get_decorator(f):
     "decorator for get function"
     @wraps(f)
@@ -52,6 +66,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[int, float, str, bytes]) -> str:
         """
