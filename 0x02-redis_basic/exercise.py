@@ -9,6 +9,21 @@ import uuid
 from functools import wraps
 
 
+
+def get_decorator(f):
+    "decorator for get function"
+    @wraps(f)
+    def wrapper(self, key: str, fn: Callable =
+                None) -> Union[str, bytes, int, None]:
+        """wrapper function for get_decorator"""
+        value = f(self, key)
+        if value is None:
+            return None
+        if fn:
+            return fn(value)
+        else:
+            return value
+    return wrapper
 class Cache:
     """
     This class provides methods to manage data in a Redis database.
@@ -23,28 +38,11 @@ class Cache:
 
     def store(self, data: Union[int, float, str, bytes]) -> str:
         """
-        Store an instance of the Redis client as a private variable and
-        flushes the redis database
+        Store an instance of the Redis client as a private variable
         """
         id = str(uuid.uuid4())
         self._redis.set(id, data)
         return id
-
-    @staticmethod
-    def get_decorator(f):
-        "decorator for get function"
-        @wraps(f)
-        def wrapper(self, key: str, fn: Callable =
-                    None) -> Union[str, bytes, int, None]:
-            """wrapper function for get_decorator"""
-            value = f(self, key)
-            if value is None:
-                return None
-            if fn:
-                return fn(value)
-            else:
-                return value
-        return wrapper
 
     @get_decorator
     def get(self, key: str, fn: Callable =

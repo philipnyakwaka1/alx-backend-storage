@@ -8,12 +8,12 @@ cache = Cache()
 
 TEST_CASES = {
     b"1": None,
-    123: int,
+    123.2: float,
     "3": lambda d: d.decode("utf-8")
 }
 
 for value, fn in TEST_CASES.items():
     c = Cache()
     key = c.store(value)
-    s = c.get_int(key)
+    s = c.get(key, bytes)
     print(s, type(s))
