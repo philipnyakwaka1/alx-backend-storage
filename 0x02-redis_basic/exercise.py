@@ -9,6 +9,19 @@ import uuid
 from functools import wraps
 
 
+def replay(func):
+    """display the history of calls of a particular function."""
+    n = func.__qualname__
+    inputs = n + ':inputs'
+    outputs = n + ':outputs'
+    r = redis.Redis()
+    id_list = r.lrange(outputs, 0, -1)
+    value_list = r.lrange(inputs, 0, -1)
+    print(f'{n} was called {len(id_list)} times')
+    for key, val in zip(id_list, value_list):
+        print(f"{n}(*('{val.decode('utf-8')}')) -> {key.decode('utf-8')}")
+
+
 def call_history(method) -> Callable:
     """decorator"""
     @wraps(method)
