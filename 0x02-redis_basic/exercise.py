@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-This module defines Cache class
+This module defines Cache class that provides methods to
+manage data the redis database
 """
 import redis
 from typing import Union
@@ -9,10 +10,13 @@ import uuid
 
 class Cache:
     """
-    Definantion of class Cache
+    This class provides methods to manage data in a Redis database.
+    The Redis database is flushed each time a new instance is created.
     """
     def __init__(self) -> None:
-        """Initializes a Cache object"""
+        """Initializes an instance of Redis client and flushes the
+        instance using flushdb
+        """
         self._redis = redis.Redis()
         self._redis.flushdb()
 
