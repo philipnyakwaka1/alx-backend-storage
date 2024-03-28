@@ -81,7 +81,7 @@ class Cache:
 
     @call_history
     @count_calls
-    def store(self, data: Union[int, float, str, bytes]) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store an instance of the Redis client as a private variable
         """
