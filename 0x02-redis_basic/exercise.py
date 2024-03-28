@@ -22,7 +22,7 @@ def replay(func):
         print(f"{n}(*('{val.decode('utf-8')}')) -> {key.decode('utf-8')}")
 
 
-def call_history(method) -> Callable:
+def call_history(method: Callable) -> Callable:
     """decorator"""
     @wraps(method)
     def wrapper(self, *args, **kwargs):
