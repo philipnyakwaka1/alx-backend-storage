@@ -19,7 +19,7 @@ def replay(func):
     value_list = r.lrange(inputs, 0, -1)
     print(f'{n} was called {len(id_list)} times')
     for key, val in zip(id_list, value_list):
-        print(f"{n}(*('{val.decode('utf-8')}')) -> {key.decode('utf-8')}")
+        print(f"{n}*({val.decode('utf-8')}) -> {key.decode('utf-8')}")
 
 
 def call_history(method: Callable) -> Callable:
